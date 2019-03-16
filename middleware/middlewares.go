@@ -45,7 +45,7 @@ func CreateOptionsRequestTerminatorMiddleware() func(http.Handler) http.Handler 
 func CreateSetRequestParamProviderMiddleware(requestParamProvider providers.RequestParamsInterface) func(http.Handler) http.Handler {
 	return func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			ctx := ContextWithRequestParamProvider(r.Context(), requestParamProvider)
+			ctx := WithRequestParamProvider(r.Context(), requestParamProvider)
 			h.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
