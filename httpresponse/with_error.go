@@ -31,6 +31,11 @@ func RespondWithSuccess(w http.ResponseWriter, respModel interface{}) error {
 	return RespondWithJSON(w, http.StatusOK, respModel)
 }
 
+// RespondWithCreated ...
+func RespondWithCreated(w http.ResponseWriter, respModel interface{}) error {
+	return RespondWithJSON(w, http.StatusCreated, respModel)
+}
+
 // RespondWithBadRequestError ...
 func RespondWithBadRequestError(w http.ResponseWriter, errMsg string) error {
 	return RespondWithError(w, errMsg, http.StatusBadRequest)
