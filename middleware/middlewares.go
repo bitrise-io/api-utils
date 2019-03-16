@@ -3,7 +3,9 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/slapec93/bitrise-api-utils/httpresponse"
+	"github.com/bitrise-io/api-utils/httpresponse"
+	"github.com/bitrise-io/api-utils/logging"
+	"go.uber.org/zap"
 )
 
 // CreateRedirectToHTTPSMiddleware ...
@@ -34,6 +36,16 @@ func CreateOptionsRequestTerminatorMiddleware() func(http.Handler) http.Handler 
 			} else {
 				h.ServeHTTP(w, r)
 			}
+		})
+	}
+}
+
+// AddLoggerToContextMiddleware ...
+func AddLoggerToContextMiddleware() func(http.Handler) http.Handler {
+	return func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			ctx := logging.NewContext(r.Context(), zap.String("request_id", r.Header.Get("X-Request-ID")))
+			h.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
 }
