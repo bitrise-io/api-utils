@@ -5,6 +5,7 @@ import (
 
 	"github.com/bitrise-io/api-utils/httpresponse"
 	"github.com/bitrise-io/api-utils/logging"
+	"github.com/bitrise-io/api-utils/providers"
 	"go.uber.org/zap"
 )
 
@@ -36,6 +37,16 @@ func CreateOptionsRequestTerminatorMiddleware() func(http.Handler) http.Handler 
 			} else {
 				h.ServeHTTP(w, r)
 			}
+		})
+	}
+}
+
+// CreateSetRequestParamProviderMiddleware ...
+func CreateSetRequestParamProviderMiddleware(requestParamProvider providers.RequestParamsInterface) func(http.Handler) http.Handler {
+	return func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			ctx := ContextWithRequestParamProvider(r.Context(), requestParamProvider)
+			h.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
 }
