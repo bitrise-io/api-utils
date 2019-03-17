@@ -68,6 +68,11 @@ func RespondWithUnauthorizedNoErr(w http.ResponseWriter) {
 	RespondWithErrorNoErr(w, "Unauthorized", http.StatusUnauthorized)
 }
 
+// RespondWithForbiddenNoErr ...
+func RespondWithForbiddenNoErr(w http.ResponseWriter) {
+	RespondWithErrorNoErr(w, "Forbidden", http.StatusForbidden)
+}
+
 // RespondWithInternalServerError ...
 func RespondWithInternalServerError(w http.ResponseWriter, errorToLog error) {
 	log.Printf(" [!] Exception: Internal Server Error: %+v", errors.WithStack(errorToLog))
