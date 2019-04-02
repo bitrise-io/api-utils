@@ -19,6 +19,12 @@ func RespondWithJSON(w http.ResponseWriter, httpCode int, respModel interface{})
 	return nil
 }
 
+// RespondWithFound ...
+func RespondWithFound(w http.ResponseWriter, redirectLocation string) error {
+	w.Header().Set("Location", redirectLocation)
+	w.WriteHeader(http.StatusFound)
+}
+
 // RespondWithError ...
 func RespondWithError(w http.ResponseWriter, errMsg string, httpErrCode int) error {
 	return RespondWithJSON(w, httpErrCode, StandardErrorRespModel{
