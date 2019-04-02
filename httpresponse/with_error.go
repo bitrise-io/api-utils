@@ -23,6 +23,7 @@ func RespondWithJSON(w http.ResponseWriter, httpCode int, respModel interface{})
 func RespondWithFound(w http.ResponseWriter, redirectLocation string) error {
 	w.Header().Set("Location", redirectLocation)
 	w.WriteHeader(http.StatusFound)
+	return nil
 }
 
 // RespondWithError ...
