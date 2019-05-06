@@ -53,14 +53,14 @@ func RespondWithBadRequestErrorNoErr(w http.ResponseWriter, errMsg string) {
 	RespondWithErrorNoErr(w, errMsg, http.StatusBadRequest)
 }
 
-// RespondWithNotFoundErrorWithMessage ...
-func RespondWithNotFoundErrorWithMessage(w http.ResponseWriter, errMsg string) {
+// RespondWithNotFoundErrorWithMessageNoErr ...
+func RespondWithNotFoundErrorWithMessageNoErr(w http.ResponseWriter, errMsg string) {
 	RespondWithErrorNoErr(w, errMsg, http.StatusNotFound)
 }
 
 // RespondWithNotFoundErrorNoErr ...
 func RespondWithNotFoundErrorNoErr(w http.ResponseWriter) {
-	RespondWithNotFoundErrorWithMessage(w, "Not Found")
+	RespondWithNotFoundErrorWithMessageNoErr(w, "Not Found")
 }
 
 // RespondWithUnauthorizedNoErr ...

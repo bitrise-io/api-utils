@@ -68,7 +68,12 @@ func RespondWithMethodNotAllowedError(w http.ResponseWriter) error {
 	return RespondWithMethodNotAllowedErrorWithMessage(w, "Method Not Allowed")
 }
 
+// RespondWithNotFoundErrorWithMessage ...
+func RespondWithNotFoundErrorWithMessage(w http.ResponseWriter, errMsg string) error {
+	return RespondWithError(w, errMsg, http.StatusNotFound)
+}
+
 // RespondWithNotFoundError ...
 func RespondWithNotFoundError(w http.ResponseWriter) error {
-	return RespondWithError(w, "Not Found", http.StatusNotFound)
+	return RespondWithNotFoundErrorWithMessage(w, "Not Found")
 }
