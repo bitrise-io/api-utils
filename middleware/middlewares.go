@@ -7,8 +7,17 @@ import (
 	"github.com/bitrise-io/api-utils/httpresponse"
 	"github.com/bitrise-io/api-utils/logging"
 	"github.com/bitrise-io/api-utils/providers"
+	"github.com/justinas/alice"
+	"github.com/rs/cors"
 	"go.uber.org/zap"
 )
+
+// CommonMiddleware ...
+func CommonMiddleware() alice.Chain {
+	return alice.New(
+		cors.AllowAll().Handler,
+	)
+}
 
 // CreateRedirectToHTTPSMiddleware ...
 func CreateRedirectToHTTPSMiddleware() func(http.Handler) http.Handler {
