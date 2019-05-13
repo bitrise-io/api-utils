@@ -7,13 +7,14 @@ import (
 	"github.com/bitrise-io/api-utils/providers"
 )
 
-type tRequestContextKey string
+// RequestContextKey ...
+type RequestContextKey string
 
 const (
 	// --- Providers
 
 	// ContextKeyRequestParamProvider ...
-	ContextKeyRequestParamProvider tRequestContextKey = "rck-request-param-provider"
+	ContextKeyRequestParamProvider RequestContextKey = "rck-request-param-provider"
 )
 
 // RequestParamProviderFromContext ...
