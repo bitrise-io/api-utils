@@ -18,3 +18,13 @@ type RequestParamsProvider struct{}
 func (r *RequestParamsProvider) Get(req *http.Request) map[string]string {
 	return mux.Vars(req)
 }
+
+// RequestParamsProviderMock ...
+type RequestParamsProviderMock struct {
+	params map[string]string
+}
+
+// Get ...
+func (r *RequestParamsProviderMock) Get(req *http.Request) map[string]string {
+	return r.params
+}
