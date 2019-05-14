@@ -16,20 +16,20 @@ import (
 
 // TestCase ...
 type TestCase struct {
-	requestHeaders   map[string]string
-	expectedStatus   int
-	expectedResponse interface{}
-	middleware       alice.Chain
+	RequestHeaders   map[string]string
+	ExpectedStatus   int
+	ExpectedResponse interface{}
+	Middleware       alice.Chain
 }
 
-// PerformMiddlewareTest ...
-func PerformMiddlewareTest(t *testing.T,
+// PerformTest ...
+func PerformTest(t *testing.T,
 	httpMethod, url string,
 	tc TestCase,
 ) {
 	t.Helper()
 
-	ts := httptest.NewServer(tc.middleware.Then(TestHandler()))
+	ts := httptest.NewServer(tc.Middleware.Then(TestHandler()))
 	defer ts.Close()
 
 	var u bytes.Buffer
@@ -39,7 +39,7 @@ func PerformMiddlewareTest(t *testing.T,
 	req, err := http.NewRequest(httpMethod, u.String(), nil)
 	require.NoError(t, err)
 
-	for key, val := range tc.requestHeaders {
+	for key, val := range tc.RequestHeaders {
 		req.Header.Add(key, val)
 	}
 	client := http.Client{}
@@ -50,9 +50,9 @@ func PerformMiddlewareTest(t *testing.T,
 	b, err := ioutil.ReadAll(res.Body)
 	require.NoError(t, err)
 
-	require.Equal(t, tc.expectedStatus, res.StatusCode)
-	if tc.expectedResponse != nil {
-		expectedBytes, err := json.Marshal(tc.expectedResponse)
+	require.Equal(t, tc.ExpectedStatus, res.StatusCode)
+	if tc.ExpectedResponse != nil {
+		expectedBytes, err := json.Marshal(tc.ExpectedResponse)
 		require.NoError(t, err)
 		require.Equal(t, string(expectedBytes), strings.Trim(string(b), "\n"))
 	}
