@@ -21,10 +21,10 @@ func (r *RequestParamsProvider) Get(req *http.Request) map[string]string {
 
 // RequestParamsProviderMock ...
 type RequestParamsProviderMock struct {
-	params map[string]string
+	Params map[string]string
 }
 
 // Get ...
 func (r *RequestParamsProviderMock) Get(req *http.Request) map[string]string {
-	return r.params
+	return r.Params
 }
