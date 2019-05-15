@@ -11,20 +11,20 @@ type RequestParamsInterface interface {
 	Get(req *http.Request) map[string]string
 }
 
-// RequestParamsProvider ...
-type RequestParamsProvider struct{}
+// RequestParams ...
+type RequestParams struct{}
 
 // Get ...
-func (r *RequestParamsProvider) Get(req *http.Request) map[string]string {
+func (r *RequestParams) Get(req *http.Request) map[string]string {
 	return mux.Vars(req)
 }
 
-// RequestParamsProviderMock ...
-type RequestParamsProviderMock struct {
+// RequestParamsMock ...
+type RequestParamsMock struct {
 	Params map[string]string
 }
 
 // Get ...
-func (r *RequestParamsProviderMock) Get(req *http.Request) map[string]string {
+func (r *RequestParamsMock) Get(req *http.Request) map[string]string {
 	return r.Params
 }
