@@ -5,10 +5,10 @@ import (
 	"net/http"
 )
 
-// RequestBodyCloseWithErrorLog ...
-func RequestBodyCloseWithErrorLog(r *http.Request) {
+// BodyCloseWithErrorLog ...
+func BodyCloseWithErrorLog(r *http.Response) {
 	err := r.Body.Close()
 	if err != nil {
-		log.Printf(" [!] Exception: RequestBodyCloseWithErrorLog: %+v", err)
+		log.Printf(" [!] Exception: response.BodyCloseWithErrorLog: %+v", err)
 	}
 }
