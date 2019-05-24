@@ -75,9 +75,13 @@ func RespondWithNotFoundErrorWithMessage(w http.ResponseWriter, errMsg string) e
 
 // RespondWithUnprocessableEntity ...
 func RespondWithUnprocessableEntity(w http.ResponseWriter, verrors []error) error {
+	errorStrings := []string{}
+	for _, verr := range verrors {
+		errorStrings = append(errorStrings, verr.Error())
+	}
 	return RespondWithJSON(w, http.StatusUnprocessableEntity, ValidationErrorRespModel{
 		Message: "Unprocessable Entity",
-		Errors:  verrors,
+		Errors:  errorStrings,
 	})
 }
 

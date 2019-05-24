@@ -16,8 +16,8 @@ type StandardErrorRespModel struct {
 
 // ValidationErrorRespModel ...
 type ValidationErrorRespModel struct {
-	Message string  `json:"message"`
-	Errors  []error `json:"errors"`
+	Message string   `json:"message"`
+	Errors  []string `json:"errors"`
 }
 
 // HanderFuncWithInternalError ...
