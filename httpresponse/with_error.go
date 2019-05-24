@@ -73,6 +73,14 @@ func RespondWithNotFoundErrorWithMessage(w http.ResponseWriter, errMsg string) e
 	return RespondWithError(w, errMsg, http.StatusNotFound)
 }
 
+// RespondWithUnprocessableEntity ...
+func RespondWithUnprocessableEntity(w http.ResponseWriter, verrors []error) error {
+	return RespondWithJSON(w, http.StatusUnprocessableEntity, ValidationErrorRespModel{
+		Message: "Unprocessable Entity",
+		Errors:  verrors,
+	})
+}
+
 // RespondWithNotFoundError ...
 func RespondWithNotFoundError(w http.ResponseWriter) error {
 	return RespondWithNotFoundErrorWithMessage(w, "Not Found")

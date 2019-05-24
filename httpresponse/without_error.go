@@ -14,6 +14,12 @@ type StandardErrorRespModel struct {
 	Message string `json:"message"`
 }
 
+// ValidationErrorRespModel ...
+type ValidationErrorRespModel struct {
+	Message string  `json:"message"`
+	Errors  []error `json:"errors"`
+}
+
 // HanderFuncWithInternalError ...
 type HanderFuncWithInternalError func(http.ResponseWriter, *http.Request) error
 
