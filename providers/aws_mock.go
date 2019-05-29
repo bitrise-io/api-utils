@@ -9,7 +9,7 @@ type AWSMock struct {
 	GeneratePresignedPUTURLFn func(string, time.Duration, int64) (string, error)
 	GetObjectFn               func(string) (string, error)
 	MoveObjectFn              func(string, string) error
-	DeleteObject              func(string) error
+	DeleteObjectFn            func(string) error
 }
 
 // GetConfig ...
