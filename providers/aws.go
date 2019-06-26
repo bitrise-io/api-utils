@@ -21,6 +21,7 @@ type AWSInterface interface {
 	GetObject(key string) (string, error)
 	GetConfig() AWSConfig
 	MoveObject(from string, to string) error
+	DeleteObject(path string) error
 }
 
 // AWSConfig ...
@@ -135,9 +136,24 @@ func (p *AWS) MoveObject(from string, to string) error {
 		return errors.WithStack(err)
 	}
 
+	err = p.DeleteObject(from)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+// DeleteObject ...
+func (p *AWS)DeleteObject(path string) error {
+	svc, err := p.createS3Client()
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
 	_, err = svc.DeleteObject(&s3.DeleteObjectInput{
 		Bucket: aws.String(p.Config.Bucket),
-		Key:    aws.String(from),
+		Key:    aws.String(path),
 	})
 	if err != nil {
 		return errors.WithStack(err)
