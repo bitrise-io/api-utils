@@ -1,6 +1,7 @@
 package providers
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -119,6 +120,23 @@ func (p *AWS) GetObject(key string) (string, error) {
 	return string(bodyBytes), nil
 }
 
+// PutObject ...
+func (p *AWS) PutObject(key string, objectBytes []byte) error {
+	svc, err := p.createS3Client()
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	_, err = svc.PutObject(&s3.PutObjectInput{
+		Bucket: aws.String(p.Config.Bucket),
+		Key:    aws.String(key),
+		Body:   bytes.NewReader(objectBytes),
+	})
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
+}
+
 // MoveObject ...
 func (p *AWS) MoveObject(from string, to string) error {
 	svc, err := p.createS3Client()
@@ -145,7 +163,7 @@ func (p *AWS) MoveObject(from string, to string) error {
 }
 
 // DeleteObject ...
-func (p *AWS)DeleteObject(path string) error {
+func (p *AWS) DeleteObject(path string) error {
 	svc, err := p.createS3Client()
 	if err != nil {
 		return errors.WithStack(err)
