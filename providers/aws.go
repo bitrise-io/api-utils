@@ -21,6 +21,7 @@ type AWSInterface interface {
 	GeneratePresignedPUTURL(key string, expiresIn time.Duration, fileSize int64) (string, error)
 	GetObject(key string) (string, error)
 	GetConfig() AWSConfig
+	PutObject(key string, objectBytes []byte) error
 	MoveObject(from string, to string) error
 	DeleteObject(path string) error
 }

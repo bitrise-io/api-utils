@@ -8,6 +8,7 @@ type AWSMock struct {
 	GeneratePresignedGETURLFn func(string, time.Duration) (string, error)
 	GeneratePresignedPUTURLFn func(string, time.Duration, int64) (string, error)
 	GetObjectFn               func(string) (string, error)
+	PutObjectFn               func(string, []byte) error
 	MoveObjectFn              func(string, string) error
 	DeleteObjectFn            func(string) error
 }
@@ -39,6 +40,14 @@ func (m *AWSMock) GetObject(key string) (string, error) {
 		panic("You have to override GetObject function in tests")
 	}
 	return m.GetObjectFn(key)
+}
+
+// PutObject ...
+func (m *AWSMock) PutObject(key string, objectBytes []byte) error {
+	if m.PutObjectFn == nil {
+		panic("You have to override PutObject function in tests")
+	}
+	return m.PutObjectFn(key, objectBytes)
 }
 
 // MoveObject ...
