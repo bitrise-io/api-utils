@@ -17,6 +17,7 @@ import (
 // TestCase ...
 type TestCase struct {
 	RequestHeaders   map[string]string
+	RequestBody      interface{}
 	ExpectedStatus   int
 	ExpectedResponse interface{}
 	Middleware       alice.Chain
@@ -36,7 +37,11 @@ func PerformTest(t *testing.T,
 	u.WriteString(string(ts.URL))
 	u.WriteString(url)
 
-	req, err := http.NewRequest(httpMethod, u.String(), nil)
+	var bodyBytes []byte
+	bodyBytes, err := json.Marshal(tc.RequestBody)
+	require.NoError(t, err)
+
+	req, err := http.NewRequest(httpMethod, u.String(), bytes.NewBuffer(bodyBytes))
 	require.NoError(t, err)
 
 	for key, val := range tc.RequestHeaders {
