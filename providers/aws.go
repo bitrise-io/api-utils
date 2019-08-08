@@ -138,8 +138,8 @@ func (p *AWS) PutObject(key string, objectBytes []byte) error {
 	return nil
 }
 
-// MoveObject ...
-func (p *AWS) MoveObject(from string, to string) error {
+// CopyObject ...
+func (p *AWS) CopyObject(from string, to string) error {
 	svc, err := p.createS3Client()
 	if err != nil {
 		return errors.WithStack(err)
@@ -151,6 +151,16 @@ func (p *AWS) MoveObject(from string, to string) error {
 		CopySource: aws.String(fmt.Sprintf("%s/%s", p.Config.Bucket, from)),
 		ACL:        aws.String("public-read"),
 	})
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+// MoveObject ...
+func (p *AWS) MoveObject(from string, to string) error {
+	err := p.CopyObject(from, to)
 	if err != nil {
 		return errors.WithStack(err)
 	}
