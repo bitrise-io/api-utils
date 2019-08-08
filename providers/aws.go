@@ -22,6 +22,7 @@ type AWSInterface interface {
 	GetObject(key string) (string, error)
 	GetConfig() AWSConfig
 	PutObject(key string, objectBytes []byte) error
+	CopyObject(from string, to string) error
 	MoveObject(from string, to string) error
 	DeleteObject(path string) error
 }
