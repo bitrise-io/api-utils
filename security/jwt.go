@@ -12,6 +12,7 @@ import (
 type JWTInterface interface {
 	Sign(authToken string) (string, error)
 	Verify(jwtToken string) (bool, error)
+	GetToken(jwtToken string) (interface{}, error)
 }
 
 // JWTService ...
@@ -57,4 +58,18 @@ func (j *JWTService) Verify(jwtToken string) (bool, error) {
 		return false, err
 	}
 	return token.Valid, nil
+}
+
+// GetToken ...
+func (j *JWTService) GetToken(jwtToken string) (interface{}, error) {
+	token, err := jwt.Parse(jwtToken, func(token *jwt.Token) (interface{}, error) {
+		return j.publicKey, nil
+	})
+	if err != nil {
+		return "", err
+	}
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return claims["token"], nil
+	}
+	return "", errors.New("Token is not valid")
 }

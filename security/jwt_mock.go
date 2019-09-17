@@ -2,8 +2,9 @@ package security
 
 // JWTMock ...
 type JWTMock struct {
-	SignFn   func(authToken string) (string, error)
-	VerifyFn func(jwtToken string) (bool, error)
+	SignFn     func(authToken string) (string, error)
+	VerifyFn   func(jwtToken string) (bool, error)
+	GetTokenFn func(jwtToken string) (interface{}, error)
 }
 
 // Sign ...
@@ -20,4 +21,12 @@ func (j *JWTMock) Verify(jwtToken string) (bool, error) {
 		panic("You have to override JWTService.Verify function in tests")
 	}
 	return j.VerifyFn(jwtToken)
+}
+
+// GetToken ...
+func (j *JWTMock) GetToken(jwtToken string) (interface{}, error) {
+	if j.GetTokenFn == nil {
+		panic("You have to override JWTService.GetTokenFn function in tests")
+	}
+	return j.GetTokenFn(jwtToken)
 }
