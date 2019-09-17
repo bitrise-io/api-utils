@@ -17,13 +17,13 @@ type JWTInterface interface {
 
 // JWTService ...
 type JWTService struct {
-	privateKey      *rsa.PrivateKey
-	publicKey       *rsa.PublicKey
-	expirationHours time.Duration
+	privateKey *rsa.PrivateKey
+	publicKey  *rsa.PublicKey
+	expiration time.Duration
 }
 
 // NewJWTService ...
-func NewJWTService(publicKey, privateKey string, expirationHours time.Duration) (JWTService, error) {
+func NewJWTService(publicKey, privateKey string, expiration time.Duration) (JWTService, error) {
 	signKey, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(privateKey))
 	if err != nil {
 		return JWTService{}, errors.Wrap(err, "Failed to parse private key")
@@ -33,9 +33,9 @@ func NewJWTService(publicKey, privateKey string, expirationHours time.Duration) 
 		return JWTService{}, errors.Wrap(err, "Failed to parse public key")
 	}
 	return JWTService{
-		privateKey:      signKey,
-		publicKey:       verifyKey,
-		expirationHours: expirationHours,
+		privateKey: signKey,
+		publicKey:  verifyKey,
+		expiration: expiration,
 	}, nil
 }
 
@@ -43,7 +43,7 @@ func NewJWTService(publicKey, privateKey string, expirationHours time.Duration) 
 func (j *JWTService) Sign(authToken string) (string, error) {
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.MapClaims{
 		"token": authToken,
-		"exp":   time.Now().Add(time.Hour * j.expirationHours).Unix(),
+		"exp":   time.Now().Add(j.expiration).Unix(),
 	})
 
 	return jwtToken.SignedString(j.privateKey)
