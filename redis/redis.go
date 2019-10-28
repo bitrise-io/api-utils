@@ -52,11 +52,11 @@ func NewPool(urlStr string, maxIdle, maxActive int) *redis.Pool {
 		IdleTimeout: 240 * time.Second,
 		MaxActive:   maxActive,
 		Dial: func() (redis.Conn, error) {
-			url, err := DialURL(urlStr)
+			url, err := dialURL(urlStr)
 			if err != nil {
 				return nil, errors.WithStack(err)
 			}
-			pass, err := DialPassword(urlStr)
+			pass, err := dialPassword(urlStr)
 			if err != nil {
 				return nil, errors.WithStack(err)
 			}
@@ -81,6 +81,17 @@ func (c *Client) Set(key string, value interface{}, ttl int) error {
 		if err != nil {
 			return err
 		}
+	}
+
+	return conn.Close()
+}
+
+// Incr ...
+func (c *Client) Incr(key string) error {
+	conn := c.pool.Get()
+	_, err := conn.Do("INCR", key)
+	if err != nil {
+		return err
 	}
 
 	return conn.Close()
@@ -116,8 +127,7 @@ func (c *Client) GetInt64(key string) (int64, error) {
 	return value, conn.Close()
 }
 
-// DialURL ...
-func DialURL(urlToParse string) (string, error) {
+func dialURL(urlToParse string) (string, error) {
 	if !strings.HasPrefix(urlToParse, "redis://") {
 		urlToParse = "redis://" + urlToParse
 	}
@@ -134,8 +144,7 @@ func DialURL(urlToParse string) (string, error) {
 	return fmt.Sprintf("%s:%s", url.Hostname(), url.Port()), nil
 }
 
-// DialPassword ...
-func DialPassword(urlToParse string) (string, error) {
+func dialPassword(urlToParse string) (string, error) {
 	if !strings.HasPrefix(urlToParse, "redis://") {
 		urlToParse = "redis://" + urlToParse
 	}

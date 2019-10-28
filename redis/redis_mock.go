@@ -6,6 +6,7 @@ type ClientMock struct {
 	GetBoolFn   func(string) (bool, error)
 	GetInt64Fn  func(string) (int64, error)
 	SetFn       func(string, interface{}, int) error
+	IncrFn      func(string) error
 }
 
 // GetString ...
@@ -38,4 +39,12 @@ func (c *ClientMock) Set(key string, value interface{}, ttl int) error {
 		panic("You have to override Client.Set function in tests")
 	}
 	return c.SetFn(key, value, ttl)
+}
+
+// Incr ...
+func (c *ClientMock) Incr(key string) error {
+	if c.IncrFn == nil {
+		panic("You have to override Client.Incr function in tests")
+	}
+	return c.IncrFn(key)
 }
