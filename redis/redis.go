@@ -111,21 +111,35 @@ func (c *Client) GetString(key string) (string, error) {
 // GetBool ...
 func (c *Client) GetBool(key string) (bool, error) {
 	conn := c.pool.Get()
-	value, err := redis.Bool(conn.Do("GET", key))
+	keyExists, err := redis.Bool(conn.Do("EXISTS", key))
 	if err != nil {
 		return false, err
 	}
-	return value, conn.Close()
+	if keyExists {
+		value, err := redis.Bool(conn.Do("GET", key))
+		if err != nil {
+			return false, err
+		}
+		return value, conn.Close()
+	}
+	return false, nil
 }
 
 // GetInt64 ...
 func (c *Client) GetInt64(key string) (int64, error) {
 	conn := c.pool.Get()
-	value, err := redis.Int64(conn.Do("GET", key))
+	keyExists, err := redis.Bool(conn.Do("EXISTS", key))
 	if err != nil {
 		return 0, err
 	}
-	return value, conn.Close()
+	if keyExists {
+		value, err := redis.Int64(conn.Do("GET", key))
+		if err != nil {
+			return 0, err
+		}
+		return value, conn.Close()
+	}
+	return 0, nil
 }
 
 func dialURL(urlToParse string) (string, error) {
