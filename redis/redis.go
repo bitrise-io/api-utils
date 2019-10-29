@@ -16,6 +16,7 @@ type Interface interface {
 	GetBool(string) (bool, error)
 	GetInt64(key string) (int64, error)
 	Set(string, interface{}, int) error
+	Incr(key string) error
 }
 
 // Client ...
