@@ -6,6 +6,9 @@ import (
 	"strings"
 	"time"
 
+	"go.uber.org/zap"
+
+	"github.com/bitrise-io/api-utils/logging"
 	"github.com/gomodule/redigo/redis"
 	"github.com/pkg/errors"
 )
@@ -101,16 +104,27 @@ func (c *Client) Incr(key string) error {
 // GetString ...
 func (c *Client) GetString(key string) (string, error) {
 	conn := c.pool.Get()
-	value, err := redis.String(conn.Do("GET", key))
+	defer c.closeConnection(conn)
+
+	keyExists, err := redis.Bool(conn.Do("EXISTS", key))
 	if err != nil {
 		return "", err
 	}
-	return value, conn.Close()
+	if keyExists {
+		value, err := redis.String(conn.Do("GET", key))
+		if err != nil {
+			return "", err
+		}
+		return value, nil
+	}
+	return "", nil
 }
 
 // GetBool ...
 func (c *Client) GetBool(key string) (bool, error) {
 	conn := c.pool.Get()
+	defer c.closeConnection(conn)
+
 	keyExists, err := redis.Bool(conn.Do("EXISTS", key))
 	if err != nil {
 		return false, err
@@ -120,14 +134,16 @@ func (c *Client) GetBool(key string) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		return value, conn.Close()
+		return value, nil
 	}
-	return false, conn.Close()
+	return false, nil
 }
 
 // GetInt64 ...
 func (c *Client) GetInt64(key string) (int64, error) {
 	conn := c.pool.Get()
+	defer c.closeConnection(conn)
+
 	keyExists, err := redis.Bool(conn.Do("EXISTS", key))
 	if err != nil {
 		return 0, err
@@ -137,9 +153,17 @@ func (c *Client) GetInt64(key string) (int64, error) {
 		if err != nil {
 			return 0, err
 		}
-		return value, conn.Close()
+		return value, nil
 	}
-	return 0, conn.Close()
+	return 0, nil
+}
+
+func (c *Client) closeConnection(conn redis.Conn) {
+	err := conn.Close()
+	if err != nil {
+		logger := logging.WithContext(nil)
+		logger.Error("Failed to close connection", zap.Error(err))
+	}
 }
 
 func dialURL(urlToParse string) (string, error) {
