@@ -122,7 +122,7 @@ func (c *Client) GetBool(key string) (bool, error) {
 		}
 		return value, conn.Close()
 	}
-	return false, nil
+	return false, conn.Close()
 }
 
 // GetInt64 ...
@@ -139,7 +139,7 @@ func (c *Client) GetInt64(key string) (int64, error) {
 		}
 		return value, conn.Close()
 	}
-	return 0, nil
+	return 0, conn.Close()
 }
 
 func dialURL(urlToParse string) (string, error) {
