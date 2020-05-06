@@ -76,15 +76,18 @@ func NewPool(urlStr string, maxIdle, maxActive int) *redis.Pool {
 // Set ...
 func (c *Client) Set(key string, value interface{}, ttl int) error {
 	conn := c.pool.Get()
-	_, err := conn.Do("SET", key, value)
+
+	conn.Send("MULTI")
+	conn.Send("SET", key, value)
+
+	if ttl > 0 {
+		conn.Send("EXPIRE", key, ttl)
+	}
+
+	_, err := conn.Do("EXEC")
+
 	if err != nil {
 		return err
-	}
-	if ttl > 0 {
-		_, err := conn.Do("EXPIRE", key, ttl)
-		if err != nil {
-			return err
-		}
 	}
 
 	return conn.Close()
