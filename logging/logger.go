@@ -48,3 +48,16 @@ func Sync(logger *zap.Logger) {
 		}
 	}
 }
+
+// NewLogger Creates new logger based on config
+func NewLogger(cfg zap.Config) *zap.Logger {
+	var err error
+
+	logger, err = cfg.Build()
+
+	if err != nil {
+		fmt.Printf("Failed to initialize logger: %s", err)
+	}
+
+	return logger
+}
