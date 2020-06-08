@@ -11,7 +11,11 @@ var stackDriverLogger *zap.Logger
 
 func init() {
 	var err error
-	logger, err = zapdriver.NewProduction()
+
+	config := zapdriver.NewProductionConfig()
+	// remove plain caller from the output
+	config.EncoderConfig.CallerKey = ""
+	logger, err = config.Build(zapdriver.WrapCore())
 
 	if err != nil {
 		fmt.Printf("Failed to initialize stackdriver logger: %s", err)
