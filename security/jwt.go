@@ -23,6 +23,10 @@ type JWTService struct {
 }
 
 // NewJWTService ...
+// Example to generate a suitable private key:
+//     openssl genrsa -out rsa.private
+// And to generate the public key for the private key:
+//     openssl rsa -in rsa.private -out rsa.public -pubout -outform PEM
 func NewJWTService(publicKey, privateKey string, expiration time.Duration) (JWTService, error) {
 	signKey, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(privateKey))
 	if err != nil {
