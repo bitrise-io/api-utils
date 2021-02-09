@@ -7,8 +7,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-// TagMissingError ...
-var TagMissingError = errors.New("Attribute tag missing")
+// ErrTagMissing ...
+var ErrTagMissing = errors.New("Attribute tag missing")
 
 // GetValueByAttributeName ...
 func GetValueByAttributeName(s interface{}, attribute string) (interface{}, error) {
@@ -33,7 +33,7 @@ func GetFieldNameByAttributeNameAndTag(s interface{}, attribute, tag string) (st
 	}
 	dbFieldName := field.Tag.Get(tag)
 	if len(dbFieldName) < 1 {
-		return "", fmt.Errorf("%w: '%s' has no tag '%s'", TagMissingError, attribute, tag)
+		return "", fmt.Errorf("%w: '%s' has no tag '%s'", ErrTagMissing, attribute, tag)
 	}
 	return dbFieldName, nil
 }

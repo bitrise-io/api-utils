@@ -18,7 +18,7 @@ func (u *UpdatableModelService) UpdateData(object interface{}, whiteList []strin
 	for _, attribute := range whiteList {
 		dbFieldName, err := structs.GetFieldNameByAttributeNameAndTag(object, attribute, "json")
 		if err != nil {
-			if errors.Is(err, structs.TagMissingError) {
+			if errors.Is(err, structs.ErrTagMissing) {
 				dbFieldName = "-"
 			} else {
 				return nil, errors.WithStack(err)
