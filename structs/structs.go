@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// TagMissingError ...
 var TagMissingError = errors.New("Attribute tag missing")
 
 // GetValueByAttributeName ...
