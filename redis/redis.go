@@ -122,18 +122,15 @@ func (c *Client) GetString(key string) (string, error) {
 	conn := c.pool.Get()
 	defer c.closeConnection(conn)
 
-	keyExists, err := redis.Bool(conn.Do("EXISTS", key))
+	value, err := redis.String(conn.Do("GET", key))
+	if err == redis.ErrNil {
+		return "", nil
+	}
 	if err != nil {
 		return "", err
 	}
-	if keyExists {
-		value, err := redis.String(conn.Do("GET", key))
-		if err != nil {
-			return "", err
-		}
-		return value, nil
-	}
-	return "", nil
+
+	return value, nil
 }
 
 // GetBool ...
@@ -141,18 +138,15 @@ func (c *Client) GetBool(key string) (bool, error) {
 	conn := c.pool.Get()
 	defer c.closeConnection(conn)
 
-	keyExists, err := redis.Bool(conn.Do("EXISTS", key))
+	value, err := redis.Bool(conn.Do("GET", key))
+	if err == redis.ErrNil {
+		return false, nil
+	}
 	if err != nil {
 		return false, err
 	}
-	if keyExists {
-		value, err := redis.Bool(conn.Do("GET", key))
-		if err != nil {
-			return false, err
-		}
-		return value, nil
-	}
-	return false, nil
+
+	return value, nil
 }
 
 // GetInt64 ...
@@ -160,18 +154,16 @@ func (c *Client) GetInt64(key string) (int64, error) {
 	conn := c.pool.Get()
 	defer c.closeConnection(conn)
 
-	keyExists, err := redis.Bool(conn.Do("EXISTS", key))
+	value, err := redis.Int64(conn.Do("GET", key))
+	if err == redis.ErrNil {
+		return 0, nil
+	}
 	if err != nil {
 		return 0, err
 	}
-	if keyExists {
-		value, err := redis.Int64(conn.Do("GET", key))
-		if err != nil {
-			return 0, err
-		}
-		return value, nil
-	}
-	return 0, nil
+
+	return value, nil
+
 }
 
 func (c *Client) closeConnection(conn redis.Conn) {
